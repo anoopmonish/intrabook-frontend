@@ -8,6 +8,7 @@ import './index.css';
 import Header from './Header';
 import Footer from './Footer';
 import Box from './Box';
+import Inaugration from './Inaugration';
 
 function App() {
 	const menu = [
@@ -36,14 +37,21 @@ function App() {
 			"price": "Rs. 40"
 		}
 	];
+
+	const newMenu = menu.map(function(item) {
+		return <Box image={item.image}
+					title={item.title}
+					text={item.text}
+					price={item.price} />;
+	});
 	return (
 		<React.StrictMode>
 			<Header />
 			<div className="row">
-				{Box(menu[0])}
-				{Box(menu[1])}
-				{Box(menu[2])}
-				{Box(menu[3])}
+				{newMenu}
+			</div>
+			<div className="row">
+				<Inaugration />
 			</div>
 			<Footer />
 		</React.StrictMode>
