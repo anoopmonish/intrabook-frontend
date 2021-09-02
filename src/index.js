@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 
 import reportWebVitals from './reportWebVitals';
@@ -7,68 +7,48 @@ import './index.css';
 
 import Header from './Header';
 import Footer from './Footer';
-import Box from './Box';
-import Inaugration from './Inaugration';
+import Post from './Post';
 
 function App() {
-	const menu = [
-		{
-			"image": "biryani.jpg",
-			"title": "Biryani",
-			"text": "Mutton Dum Biryani",
-			"price": "Rs. 200"
-		},
-		{
-			"image": "pizza.png",
-			"title": "Pizza",
-			"text": "Fresh pan pizza",
-			"price": "Rs. 100"
-		},
-		{
-			"image": "cake.png",
-			"title": "Cake",
-			"text": "Creamy vanilla cake",
-			"price": "Rs. 50"
-		},
-		{
-			"image": "pakoda.png",
-			"title": "Pakoda",
-			"text": "Garma Garam pakoda",
-			"price": "Rs. 40"
-		}
-	];
 
-	const newMenu = menu.map(function(item) {
-		return <Box image={item.image}
-					title={item.title}
-					text={item.text}
-					price={item.price} />;
+	const [posts, setPosts] = useState([]);
+    const [loadDone, setloadDone] = useState(false);
+	const userId = 'anoop';
+
+	useEffect(() => {
+		if (!loadDone && userId) {
+			const movProm = fetch('http:///localhost:8080/posts');
+			movProm.then(function(response) {
+				setloadDone(true);
+				response.json().then(function(resp) {
+					setPosts(resp);
+				});
+			} , function(error) {
+				console.log(error);
+			});
+		}
+	});
+
+	const postBoxes = posts.map(function(item) {
+		return <Post userId={userId} item={item} key={item.postId}/>;
 	});
 	return (
-		<React.StrictMode>
-			<Header />
+		<div>
+			<center>Logged in as: {userId}</center>
 			<div className="row">
-				{newMenu}
+				{postBoxes}
 			</div>
-			<div className="row">
-				<Inaugration />
-			</div>
-			<Footer />
-		</React.StrictMode>
+		</div>
 	);
 }
 
-ReactDOM.render(<App />, document.getElementById('root'));
+ReactDOM.render(
+		<React.StrictMode>
+			<Header />
+			<App />
+			<Footer />
+		</React.StrictMode>, 
+	document.getElementById('root'));
 
-// .JSX
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-/*
-<React.StrictMode>
-    <App />
-  </React.StrictMode>
-*/
 reportWebVitals();
 
